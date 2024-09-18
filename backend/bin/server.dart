@@ -14,36 +14,6 @@ final _router = Router(notFoundHandler: _notFoundHandler)
 
 final _headers = {'Content-Type': 'application/json'};
 
-Future<Response> _submitHandler(Request req) async {
-  try {
-    final payload = await req.readAsString();
-
-    final data = json.decode(payload);
-
-    final name = data['name'] as String?;
-
-    if (name != null && name.isNotEmpty) {
-      final response = {'message': 'Chao mung ${name}'};
-      return Response.ok(
-        json.encode(response),
-        headers: _headers,
-      );
-    } else {
-      final response = {'message': 'Ko nhan dc ten ban'};
-      return Response.badRequest(
-        body: json.encode(response),
-        headers: _headers,
-      );
-    }
-  } catch (e) {
-    final response = {'message': 'yeu cau khong hop le . Loi ${e.toString()}'};
-    return Response.badRequest(
-      body: json.encode(response),
-      headers: _headers,
-    );
-  }
-}
-
 Response _rootHandler(Request req) {
   return Response.ok(json.encode({'message': 'Hello world'}),
       headers: _headers);
@@ -62,6 +32,36 @@ Response _notFoundHandler(Request req) {
 Response _echoHandler(Request request) {
   final message = request.params['message'];
   return Response.ok('$message\n');
+}
+
+Future<Response> _submitHandler(Request req) async {
+  try {
+    final payload = await req.readAsString();
+
+    final data = json.decode(payload);
+
+    final name = data['name'] as String?;
+
+    if (name != null && name.isNotEmpty) {
+      final response = {'message': 'Chao mung $name'};
+      return Response.ok(
+        json.encode(response),
+        headers: _headers,
+      );
+    } else {
+      final response = {'message': 'Khong nhan dc ten ban'};
+      return Response.badRequest(
+        body: json.encode(response),
+        headers: _headers,
+      );
+    }
+  } catch (e) {
+    final response = {'message': 'yeu cau khong hop le . Loi ${e.toString()}'};
+    return Response.badRequest(
+      body: json.encode(response),
+      headers: _headers,
+    );
+  }
 }
 
 void main(List<String> args) async {
